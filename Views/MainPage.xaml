@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MauiOCRFacturas.ViewModels"
+             x:Class="MauiOCRFacturas.Views.MainPage"
+             x:DataType="vm:MainViewModel"
+             Title="OCR Facturas">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="16" Padding="20">
+
+            <!-- Titulo -->
+            <Label Text="Escaner de Facturas"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   TextColor="#512BD4" />
+
+            <Label Text="Azure Document Intelligence"
+                   FontSize="14"
+                   HorizontalOptions="Center"
+                   TextColor="Gray" />
+
+            <BoxView HeightRequest="1" Color="LightGray" />
+
+            <!-- Botones de captura -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                <Button Grid.Column="0"
+                        Text="Tomar Foto"
+                        Command="{Binding TomarFotoCommand}"
+                        BackgroundColor="#512BD4"
+                        TextColor="White"
+                        CornerRadius="10"
+                        HeightRequest="50" />
+
+                <Button Grid.Column="1"
+                        Text="Galeria"
+                        Command="{Binding SeleccionarImagenCommand}"
+                        BackgroundColor="#0078D4"
+                        TextColor="White"
+                        CornerRadius="10"
+                        HeightRequest="50" />
+            </Grid>
+
+            <!-- Preview de imagen -->
+            <Frame IsVisible="{Binding ImagenCapturada, Converter={StaticResource NotNullConverter}}"
+                   CornerRadius="10"
+                   Padding="5"
+                   BorderColor="#512BD4">
+                <Image Source="{Binding ImagenCapturada}"
+                       HeightRequest="220"
+                       Aspect="AspectFit" />
+            </Frame>
+
+            <!-- Indicador de carga -->
+            <VerticalStackLayout IsVisible="{Binding IsLoading}" HorizontalOptions="Center">
+                <ActivityIndicator IsRunning="{Binding IsLoading}"
+                                   Color="#512BD4"
+                                   HeightRequest="40" />
+                <Label Text="Procesando con Azure..."
+                       HorizontalOptions="Center"
+                       TextColor="Gray" />
+            </VerticalStackLayout>
+
+            <!-- Resultado del OCR -->
+            <Frame CornerRadius="10"
+                   Padding="12"
+                   BorderColor="#E0E0E0"
+                   BackgroundColor="#F8F8F8">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Resultado del Analisis"
+                           FontAttributes="Bold"
+                           TextColor="#333" />
+                    <ScrollView HeightRequest="200">
+                        <Label Text="{Binding ResultadoTexto}"
+                               FontSize="13"
+                               TextColor="#555"
+                               LineBreakMode="WordWrap" />
+                    </ScrollView>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Boton historial -->
+            <Button Text="Ver Historial de Facturas"
+                    Command="{Binding VerHistorialCommand}"
+                    BackgroundColor="Transparent"
+                    TextColor="#512BD4"
+                    BorderColor="#512BD4"
+                    BorderWidth="1"
+                    CornerRadius="10" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
