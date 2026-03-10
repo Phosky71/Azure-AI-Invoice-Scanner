@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MauiOCRFacturas.ViewModels"
+             xmlns:models="clr-namespace:MauiOCRFacturas.Models"
+             x:Class="MauiOCRFacturas.Views.HistorialPage"
+             x:DataType="vm:HistorialViewModel"
+             Title="Historial de Facturas">
+
+    <VerticalStackLayout Padding="20" Spacing="12">
+
+        <Label Text="Facturas Analizadas"
+               FontSize="22"
+               FontAttributes="Bold"
+               TextColor="#512BD4" />
+
+        <!-- Botones de accion -->
+        <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+            <Button Grid.Column="0"
+                    Text="Actualizar"
+                    Command="{Binding ActualizarHistorialCommand}"
+                    BackgroundColor="#512BD4"
+                    TextColor="White"
+                    CornerRadius="8" />
+
+            <Button Grid.Column="1"
+                    Text="Limpiar Todo"
+                    Command="{Binding LimpiarHistorialCommand}"
+                    BackgroundColor="#D32F2F"
+                    TextColor="White"
+                    CornerRadius="8" />
+        </Grid>
+
+        <!-- Mensaje cuando no hay facturas -->
+        <Label IsVisible="{Binding HayFacturas, Converter={StaticResource InverseBoolConverter}}"
+               Text="No hay facturas analizadas todavia.&#10;Ve a la pantalla principal y analiza una factura."
+               HorizontalOptions="Center"
+               HorizontalTextAlignment="Center"
+               TextColor="Gray"
+               Margin="0,30,0,0" />
+
+        <!-- Lista de facturas -->
+        <CollectionView ItemsSource="{Binding Facturas}"
+                        IsVisible="{Binding HayFacturas}"
+                        SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:ResultadoOCR">
+                    <Frame Margin="0,4"
+                           CornerRadius="10"
+                           Padding="12"
+                           BorderColor="#E0E0E0">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HistorialViewModel}}, Path=SeleccionarFacturaCommand}"
+                                CommandParameter="{Binding .}" />
+                        </Frame.GestureRecognizers>
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{Binding Resumen}"
+                                   FontAttributes="Bold"
+                                   FontSize="15"
+                                   TextColor="#333" />
+                            <Label Text="{Binding FechaAnalisis, StringFormat='{0:dd/MM/yyyy HH:mm}'}"
+                                   FontSize="12"
+                                   TextColor="Gray" />
+                            <Label Text="{Binding NumeroFactura, StringFormat='Factura: {0}'}"
+                                   FontSize="12"
+                                   TextColor="#555"
+                                   IsVisible="{Binding NumeroFactura, Converter={StaticResource NotNullConverter}}" />
+                        </VerticalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Boton volver -->
+        <Button Text="Volver al Escaner"
+                Command="{Binding VolverCommand}"
+                BackgroundColor="Transparent"
+                TextColor="#512BD4"
+                BorderColor="#512BD4"
+                BorderWidth="1"
+                CornerRadius="10"
+                Margin="0,8,0,0" />
+
+    </VerticalStackLayout>
+
+</ContentPage>
